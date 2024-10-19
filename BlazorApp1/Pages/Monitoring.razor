@@ -1,0 +1,65 @@
+﻿@page "/monitoring"
+@using MQTTnet
+@using System.Text.Json
+
+<h3>ESP32 Monitoring</h3>
+<div>
+    <p><strong>Voltage:</strong> @voltage</p>
+    <p><strong>Current:</strong> @current</p>
+    <p><strong>Power:</strong> @power</p>
+    <p><strong>kWh:</strong> @kwh</p>
+</div>
+
+@code {
+    [Inject]
+    private MqttService mqttService { get; set; }
+
+    private double voltage = 0;
+    private double current = 0;
+    private double power = 0;
+    private double kwh = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Connect to MQTT
+        await mqttService.ConnectToAwsMqttAsync();
+
+        // Get the last message immediately after connecting
+        var lastMessage = mqttService.GetLastMessage();
+        UpdateData(lastMessage); // Update data if there's a last message
+
+        // Subscribe to message updates
+        mqttService.ApplicationMessageReceived += message =>
+        {
+            UpdateData(message); // Update the UI whenever a new message is received
+            //return Task.CompletedTask;
+        };
+    }
+
+    private void UpdateData(string message)
+    {
+        if (!string.IsNullOrEmpty(message))
+        {
+            var data = JsonSerializer.Deserialize<Esp32>(message);
+            if (data != null)
+            {
+                voltage = data.Voltage;
+                current = data.Current;
+                power = data.Power;
+                kwh = data.Kwh;
+
+                // Ensure the UI updates when data changes
+                InvokeAsync(StateHasChanged);
+            }
+        }
+    }
+
+// Define your ESP32 class according to the expected JSON structure
+public class Esp32
+{
+    public double Voltage { get; set; }
+    public double Current { get; set; }
+    public double Power { get; set; }
+    public double Kwh { get; set; }
+}
+}
