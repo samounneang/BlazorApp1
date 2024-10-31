@@ -1,9 +1,138 @@
-﻿@page "/"
+﻿@page "/device-track-report/{UserId?}"
+@using System.Globalization
+@using System.Text;
+@inject IJSRuntime JSRuntime
+@* 
+<RadzenCard class="rz-my-12">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap">
 
-<PageTitle>Index</PageTitle>
+        <RadzenStack Orientation="Orientation.Vertical" Gap="3px">
+            <RadzenFormField Text="User ID" Variant="Variant.Outlined">
+                <RadzenDropDown @ref=@radzenDropDown @bind-SearchText=SearchText FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith" AllowFiltering="true"
+                                Data=@users TextProperty="@nameof(UserModel.ADUser)" ValueProperty="@nameof(UserModel.UserID)" AllowClear="true" @bind-Value=selectedUserID Style="width: 100%; max-width: 400px;" Name="DropDownFiltering" />
+            </RadzenFormField>
+        </RadzenStack>
 
-<h1>Hello, world!</h1>
+        <RadzenStack Orientation="Orientation.Vertical" Gap="3px">
+            <RadzenFormField Text="From Date" Variant="Variant.Outlined">
+                <RadzenDatePicker @bind-Value=@fromDate Name="RadzenDatePickerBindValue" ShowCalendarWeek DateFormat="MM/dd/yyyy" />
 
-Welcome to your new app.
+            </RadzenFormField>
+        </RadzenStack>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+        <RadzenStack Orientation="Orientation.Vertical" Gap="3px">
+            <RadzenFormField Text="To Date" Variant="Variant.Outlined">
+                <RadzenDatePicker @bind-Value=@toDate Name="RadzenDatePickerBindValue" ShowCalendarWeek DateFormat="MM/dd/yyyy" />
+            </RadzenFormField>
+        </RadzenStack>
+
+        <RadzenStack Orientation="Orientation.Vertical" Gap="3px">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem" Style="padding-top:10px">
+                <RadzenButton Icon="search" Shade="Shade.Lighter" Click=ApplyFilter Text="Filter" ButtonStyle="ButtonStyle.Primary" style="text-transform: capitalize;" />
+                <RadzenButton Icon="cached" Shade="Shade.Lighter" Click=ClearFilter Text="Clear" ButtonStyle="ButtonStyle.Danger" style="text-transform: capitalize;" />
+                <RadzenButton Icon="get_app" Shade="Shade.Lighter" Click=ExportExcel Text="Export" ButtonStyle="ButtonStyle.Success" style="text-transform: capitalize;" />
+            </RadzenStack>
+        </RadzenStack>
+    </RadzenStack>
+</RadzenCard> *@
+
+<RadzenStack Gap="1rem">
+    <RadzenDataGrid TItem="DeviceModel" @ref="dataGrid" Data="@filteredData" AllowPaging="true"
+                    PagerHorizontalAlign="HorizontalAlign.Center" AllowSorting="true"
+                    PageSizeOptions="@pageSizeOptions" ShowPagingSummary="@showPagerSummary"
+                    PagingSummaryFormat="@pagingSummaryFormat">
+        <Columns>
+
+            <RadzenDataGridColumn TItem="DeviceModel" Property="DeviceID" Title="Device Id" />
+            <RadzenDataGridColumn TItem="DeviceModel" Property="Type" Title="Type" />
+            <RadzenDataGridColumn TItem="DeviceModel" Property="Value" Title="Value" />
+            <RadzenDataGridColumn TItem="DeviceModel" Property="Unit" Title="Unit" />
+            <RadzenDataGridColumn TItem="DeviceModel" Property="CreatedDate" Title="Created Date" />
+            <RadzenDataGridColumn TItem="DeviceModel" Property="CreatedByUsername" Title="Username" />
+            <RadzenDataGridColumn TItem="DeviceModel" Property="Remark" Title="Remark" />
+
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>
+
+@code {
+    
+
+    RadzenDropDown<string> radzenDropDown;
+    IEnumerable<UserModel> users;
+    string searchText = "";
+    public string SearchText
+    {
+        get
+        {
+            return searchText;
+        }
+        set
+        {
+            if (searchText != value)
+            {
+                searchText = value;
+                Console.WriteLine($"Search text: {radzenDropDown.SearchText}");
+            }
+        }
+    }
+    private string username = string.Empty;
+    private DateTime? fromDate;
+    private DateTime? toDate;
+    private string selectedUserID = "0";
+    private List<DeviceModel> filteredData = new();
+    public List<UserModel> Users { get; set; } = new();
+
+    //Param
+    [Parameter]
+    public string? UserId { get; set; }
+
+    //Method
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+           
+        }
+        catch (Exception ex)
+        {
+          
+        }
+    }
+ 
+    //Model
+    public class UserModel
+    {
+        public string? UserID { get; set; }
+        public string? ADUser { get; set; }
+    }
+    public class DeviceModel
+    {
+        public string DeviceID { get; set; }
+        public int? Value { get; set; }
+        public string? Type { get; set; }
+        public string? Unit { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public string? CreatedByUsername { get; set; }
+        public string? Remark { get; set; }
+    }
+    public class ResModel
+    {
+        public string? Status { get; set; }
+        public string? Message { get; set; }
+        public string? Data { get; set; }
+    }
+    public class FilterData
+    {
+        public string? StartDate { get; set; }
+        public string? EndDate { get; set; }
+        public string? UserId { get; set; }
+    }
+
+    // Grid
+    string pagingSummaryFormat = "Displaying page {0} of {1} <b>(total {2} records)</b>";
+    DeviceModel deviceModel = new();
+    RadzenDataGrid<DeviceModel>? dataGrid;
+    IEnumerable<int> pageSizeOptions = new int[] { 10, 20, 30 };
+    bool showPagerSummary = true;
+}

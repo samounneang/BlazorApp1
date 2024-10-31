@@ -4,6 +4,7 @@ using BlazorApp1.Data;
 using MQTTnet.Client;
 using MQTTnet;
 using System.Security.Cryptography.X509Certificates;
+using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,6 +75,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 // });
 
 builder.Services.AddSingleton<MqttService>();
+builder.Services.AddRadzenComponents();
 
 var app = builder.Build();
 

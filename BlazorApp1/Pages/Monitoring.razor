@@ -1,38 +1,50 @@
-﻿@page "/monitoring"
+﻿@page "/"
 @using MQTTnet
 @using System.Text.Json
 
-<h3>ESP32 Monitoring</h3>
-<div>
-    <p><strong>Voltage:</strong> @voltage</p>
-    <p><strong>Current:</strong> @current</p>
-    <p><strong>Power:</strong> @power</p>
-    <p><strong>kWh:</strong> @kwh</p>
-</div>
+<RadzenStack Gap="1rem">
+    <RadzenDataGrid TItem="Esp32" @ref="dataGrid" Data="@filteredData" AllowPaging="true"
+                    PagerHorizontalAlign="HorizontalAlign.Center" AllowSorting="true"
+                    PageSizeOptions="@pageSizeOptions" ShowPagingSummary="@showPagerSummary"
+                    PagingSummaryFormat="@pagingSummaryFormat">
+        <Columns>
+
+            <RadzenDataGridColumn TItem="Esp32" Property="Voltage" Title="Device Id" />
+            <RadzenDataGridColumn TItem="Esp32" Property="Current" Title="Type" />
+            <RadzenDataGridColumn TItem="Esp32" Property="Power" Title="Value" />
+            <RadzenDataGridColumn TItem="Esp32" Property="Kwh" Title="Kwh" />
+
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>
 
 @code {
     [Inject]
     private MqttService mqttService { get; set; }
 
-    private double voltage = 0;
-    private double current = 0;
-    private double power = 0;
-    private double kwh = 0;
-
+    // private double voltage = 0;
+    // private double current = 0;
+    // private double power = 0;
+    // private double kwh = 0;
+    List<Esp32> filteredData = new()
+    {
+        new Esp32{Voltage=1,Current=2,Power=3,Kwh=4},
+        new Esp32{Voltage=1,Current=2,Power=3,Kwh=4},
+        new Esp32{Voltage=1,Current=2,Power=3,Kwh=4},
+        new Esp32{Voltage=1,Current=2,Power=3,Kwh=4},
+        new Esp32{Voltage=1,Current=2,Power=3,Kwh=4},
+    };
     protected override async Task OnInitializedAsync()
     {
         // Connect to MQTT
         await mqttService.ConnectToAwsMqttAsync();
 
-        // Get the last message immediately after connecting
         var lastMessage = mqttService.GetLastMessage();
         UpdateData(lastMessage); // Update data if there's a last message
 
-        // Subscribe to message updates
         mqttService.ApplicationMessageReceived += message =>
         {
             UpdateData(message); // Update the UI whenever a new message is received
-            //return Task.CompletedTask;
         };
     }
 
@@ -43,10 +55,11 @@
             var data = JsonSerializer.Deserialize<Esp32>(message);
             if (data != null)
             {
-                voltage = data.Voltage;
-                current = data.Current;
-                power = data.Power;
-                kwh = data.Kwh;
+
+                // voltage = data.Voltage;
+                // current = data.Current;
+                // power = data.Power;
+                // kwh = data.Kwh;
 
                 // Ensure the UI updates when data changes
                 InvokeAsync(StateHasChanged);
@@ -54,7 +67,6 @@
         }
     }
 
-// Define your ESP32 class according to the expected JSON structure
 public class Esp32
 {
     public double Voltage { get; set; }
@@ -62,4 +74,12 @@ public class Esp32
     public double Power { get; set; }
     public double Kwh { get; set; }
 }
-}
+
+    // Grid
+    string pagingSummaryFormat = "Displaying page {0} of {1} <b>(total {2} records)</b>";
+    Esp32 deviceModel = new();
+    RadzenDataGrid<Esp32>? dataGrid;
+    IEnumerable<int> pageSizeOptions = new int[] { 10, 20, 30 };
+    bool showPagerSummary = true;
+} 
+
