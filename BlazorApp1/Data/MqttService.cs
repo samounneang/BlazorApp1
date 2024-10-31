@@ -48,7 +48,7 @@ public class MqttService
             Console.WriteLine("Connected to AWS IoT MQTT successfully.");
 
             // Subscribe to the topic
-            await mqttClient.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("umelectric/test/").Build());
+            await mqttClient.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("uma/gateway/00aE9F76/electrical/meter").Build());
 
             // Handle incoming messages
             mqttClient.ApplicationMessageReceivedAsync += async e =>

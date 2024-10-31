@@ -1,26 +1,28 @@
 {
   "format": 1,
   "restore": {
-    "/Users/pumotodup/Documents/IOT/BlazorApp1/BlazorApp1/BlazorApp1.csproj": {}
+    "D:\\source\\BlazorApp1\\BlazorApp1\\BlazorApp1.csproj": {}
   },
   "projects": {
-    "/Users/pumotodup/Documents/IOT/BlazorApp1/BlazorApp1/BlazorApp1.csproj": {
+    "D:\\source\\BlazorApp1\\BlazorApp1\\BlazorApp1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/pumotodup/Documents/IOT/BlazorApp1/BlazorApp1/BlazorApp1.csproj",
+        "projectUniqueName": "D:\\source\\BlazorApp1\\BlazorApp1\\BlazorApp1.csproj",
         "projectName": "BlazorApp1",
-        "projectPath": "/Users/pumotodup/Documents/IOT/BlazorApp1/BlazorApp1/BlazorApp1.csproj",
-        "packagesPath": "/Users/pumotodup/.nuget/packages/",
-        "outputPath": "/Users/pumotodup/Documents/IOT/BlazorApp1/BlazorApp1/obj/",
+        "projectPath": "D:\\source\\BlazorApp1\\BlazorApp1\\BlazorApp1.csproj",
+        "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
+        "outputPath": "D:\\source\\BlazorApp1\\BlazorApp1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/pumotodup/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "/usr/local/share/dotnet/library-packs": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -47,6 +49,10 @@
             "MQTTnet": {
               "target": "Package",
               "version": "[4.1.2, )"
+            },
+            "Radzen.Blazor": {
+              "target": "Package",
+              "version": "[5.5.0, )"
             }
           },
           "imports": [
@@ -68,7 +74,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
